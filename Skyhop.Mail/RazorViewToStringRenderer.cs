@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting.Internal;
 using Microsoft.Extensions.ObjectPool;
 using System;
 using System.Diagnostics;
@@ -20,7 +19,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace SkyHop.Mail
+namespace Skyhop.Mail
 {
     // Code from: https://github.com/aspnet/Entropy/blob/master/samples/Mvc.RenderViewToString/RazorViewToStringRenderer.cs
 

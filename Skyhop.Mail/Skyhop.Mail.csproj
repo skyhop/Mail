@@ -2,6 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Corstian Boerman</Authors>
+    <Company>Skyhop</Company>
+    <Description>A library smoothing email generation from .NET code, by enforcing a strong boundary between the template, and code rendering the template.</Description>
+    <Copyright>Skyhop</Copyright>
+    <PackageProjectUrl>https://github.com/skyhop/Mail</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/skyhop/Mail</RepositoryUrl>
+    <PackageReleaseNotes>Initial NuGet release</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
