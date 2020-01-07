@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>dotnet-Sample.Service-5E5EF1A3-8152-4B8A-AB94-F8997D937D67</UserSecretsId>
   </PropertyGroup>
 

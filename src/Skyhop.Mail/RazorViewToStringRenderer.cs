@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -25,9 +25,9 @@ namespace Skyhop.Mail
 
     public class RazorViewToStringRenderer
     {
-        private IRazorViewEngine _viewEngine;
-        private ITempDataProvider _tempDataProvider;
-        private IServiceProvider _serviceProvider;
+        private readonly IRazorViewEngine _viewEngine;
+        private readonly ITempDataProvider _tempDataProvider;
+        private readonly IServiceProvider _serviceProvider;
 
         public RazorViewToStringRenderer(
             IRazorViewEngine viewEngine,
@@ -41,8 +41,8 @@ namespace Skyhop.Mail
 
         public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model)
         {
-            var actionContext = GetActionContext();
-            var view = FindView(actionContext, viewName);
+            var actionContext = _getActionContext();
+            var view = _findView(actionContext, viewName);
 
             using (var output = new StringWriter())
             {
@@ -67,10 +67,9 @@ namespace Skyhop.Mail
             }
         }
 
-        private IView FindView(ActionContext actionContext, string viewName)
+        private IView _findView(ActionContext actionContext, string viewName)
         {
-            string executingFilePath = null;
-            var getViewResult = _viewEngine.GetView(executingFilePath, viewPath: viewName, isMainPage: true);
+            var getViewResult = _viewEngine.GetView(executingFilePath: null, viewPath: viewName, isMainPage: true);
             if (getViewResult.Success)
             {
                 return getViewResult.View;
@@ -90,10 +89,12 @@ namespace Skyhop.Mail
             throw new InvalidOperationException(errorMessage);
         }
 
-        private ActionContext GetActionContext()
+        private ActionContext _getActionContext()
         {
-            var httpContext = new DefaultHttpContext();
-            httpContext.RequestServices = _serviceProvider;
+            var httpContext = new DefaultHttpContext
+            {
+                RequestServices = _serviceProvider
+            };
             return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
         }
 

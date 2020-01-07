@@ -1,11 +1,11 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MimeKit;
 using SampleService.Models;
 using Skyhop.Mail;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Sample.Service
 {
