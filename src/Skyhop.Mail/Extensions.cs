@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Razor.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using SkyHop.Mail;
 using System;
 using System.IO;
 using System.Linq;
@@ -12,7 +11,7 @@ namespace Skyhop.Mail
 {
     public static class Extensions
     {
-        public static async Task<string> GetViewForModel<T>(this RazorViewToStringRenderer renderer, T model)
+        public static async Task<string?> GetViewForModel<T>(this RazorViewToStringRenderer renderer, T model)
         {
             var files = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.Views.dll");
 

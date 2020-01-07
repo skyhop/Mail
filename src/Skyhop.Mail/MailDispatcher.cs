@@ -1,7 +1,5 @@
 using HtmlAgilityPack;
 using MimeKit;
-using SkyHop.Mail;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,9 +16,9 @@ namespace Skyhop.Mail
             _options = options;
         }
 
-        public async Task<MimeMessage> GenerateMessage<T>(T data, MimeEntity[] attachments = default) where T : MailBase
+        public async Task<MimeMessage> GenerateMessage<T>(T data, MimeEntity[]? attachments = default) where T : MailBase
         {
-            var (htmlBody, textBody) = await GetBody(data);
+            var (htmlBody, textBody) = await _getBody(data);
 
             data.BodyBuilder.HtmlBody = htmlBody;
             data.BodyBuilder.TextBody = textBody;
@@ -43,11 +41,11 @@ namespace Skyhop.Mail
 
         public async Task SendMail<T>(
             T data,
-            MailboxAddress from = default,
-            MailboxAddress[] to = default,
-            MailboxAddress[] cc = default,
-            MailboxAddress[] bcc = default,
-            MimeEntity[] attachments = default) where T : MailBase
+            MailboxAddress? from = default,
+            MailboxAddress[]? to = default,
+            MailboxAddress[]? cc = default,
+            MailboxAddress[]? bcc = default,
+            MimeEntity[]? attachments = default) where T : MailBase
         {
             var message = await GenerateMessage(data, attachments);
 
@@ -57,10 +55,10 @@ namespace Skyhop.Mail
             if (cc != default && cc.Any()) data.MailMessage.Cc.AddRange(cc);
             if (bcc != default && bcc.Any()) data.MailMessage.Bcc.AddRange(bcc);
 
-            _options.MailSender.Invoke(data.MailMessage);
+            _options.MailSender?.Invoke(data.MailMessage);
         }
 
-        private async Task<(string HtmlBody, string TextBody)> GetBody<T>(T data)
+        private async Task<(string HtmlBody, string TextBody)> _getBody<T>(T data)
         {
             var htmlBody = await _renderer.GetViewForModel(data);
 
@@ -71,7 +69,7 @@ namespace Skyhop.Mail
             var doc = new HtmlDocument();
             doc.LoadHtml(htmlBody);
 
-            var txtBody = String.Join(" ", doc.DocumentNode.SelectNodes("//text()").Select(q => q.InnerText));
+            var txtBody = string.Join(" ", doc.DocumentNode.SelectNodes("//text()").Select(q => q.InnerText));
 
             return (htmlBody, txtBody);
         }
