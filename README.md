@@ -1,4 +1,4 @@
-﻿![Skyhop logo](https://app.skyhop.org/assets/images/skyhop.svg){width="200px"}
+﻿<a href="https://skyhop.org"><img src="https://app.skyhop.org/assets/images/skyhop.svg" width=200 alt="skyhop logo" /></a>
 
 ----
 
