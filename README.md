@@ -1,4 +1,4 @@
-﻿<a href="https://skyhop.org"><img src="https://app.skyhop.org/assets/images/skyhop.svg" width=200 alt="skyhop logo" /></a>
+<a href="https://skyhop.org"><img src="https://app.skyhop.org/assets/images/skyhop.svg" width=200 alt="skyhop logo" /></a>
 
 ----
 
@@ -9,9 +9,23 @@ This core principle behind this library is based on several prior blog posts:
 - [Rendering Razor views by supplying a model instance](https://corstianboerman.com/2019-05-27/rendering-razor-views-by-supplying-a-model-instance.html)
 - [Using the RazorViewToStringRenderer with Asp.Net Core 3](https://corstianboerman.com/2019-12-25/using-the-razorviewtostringrenderer-with-asp-net-core-3.html)
 
+There is a blog post which extensively describes the approach and background of this library [available **over here**](http://corstianboerman.com/2020-01-07/sending-transactional-emails-from-asp-net-core.html).
+
 # Installation
 
-NuGet packages will be made available shortly. Until that time, just clone this repository.
+The NuGet hosted package is available [over here](https://www.nuget.org/packages/Skyhop.Mail). Install it using the following commands:
+
+**Using the NuGet Package Manager**
+```
+Install-Package Skyhop.Mail
+```
+
+**Using the .NET CLI**
+```
+dotnet add package Skyhop.Mail
+```
+
+---
 
 You should reference this project on your template project (or at least the project which contains your views and view-models). After which there are two changes you will need to make to your `.csproj` file:
 
