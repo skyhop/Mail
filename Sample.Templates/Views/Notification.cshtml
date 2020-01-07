@@ -1,0 +1,9 @@
+﻿@model SampleService.Models.ServiceActionModel
+
+@{ 
+    Layout = "_Layout";
+
+    Model.MailMessage.Subject = "Service status change 🤨";
+}
+
+<p>Current service action: @Model.ActionName. Executed at @Model.Timestamp</p>

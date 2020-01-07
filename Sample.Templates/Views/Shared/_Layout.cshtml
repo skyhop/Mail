@@ -1,0 +1,7 @@
+﻿@model Skyhop.Mail.MailBase
+
+<p><strong>This mail is sent to @string.Join(", ", Model.MailMessage.To.Select(q => q.Name))</strong></p>
+
+@RenderBody()
+
+<p><strong>This is some footer</strong></p>

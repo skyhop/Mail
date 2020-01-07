@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29521.150
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skyhop.Mail", "Skyhop.Mail\Skyhop.Mail.csproj", "{2071474B-E5DA-4C5B-B2B4-EF04D0C67413}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample", "Sample", "{B4B6A092-ED3B-4DF2-95E0-59A7A119AF3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Templates", "Sample.Templates\Sample.Templates.csproj", "{40600EDA-BC9E-4DCE-96C7-5001185E304D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Service", "Sample.Service\Sample.Service.csproj", "{AD1A51BF-CBB9-4463-85E3-B68BAEA67471}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2071474B-E5DA-4C5B-B2B4-EF04D0C67413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2071474B-E5DA-4C5B-B2B4-EF04D0C67413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2071474B-E5DA-4C5B-B2B4-EF04D0C67413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2071474B-E5DA-4C5B-B2B4-EF04D0C67413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40600EDA-BC9E-4DCE-96C7-5001185E304D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40600EDA-BC9E-4DCE-96C7-5001185E304D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40600EDA-BC9E-4DCE-96C7-5001185E304D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40600EDA-BC9E-4DCE-96C7-5001185E304D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD1A51BF-CBB9-4463-85E3-B68BAEA67471}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD1A51BF-CBB9-4463-85E3-B68BAEA67471}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD1A51BF-CBB9-4463-85E3-B68BAEA67471}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD1A51BF-CBB9-4463-85E3-B68BAEA67471}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{40600EDA-BC9E-4DCE-96C7-5001185E304D} = {B4B6A092-ED3B-4DF2-95E0-59A7A119AF3C}
+		{AD1A51BF-CBB9-4463-85E3-B68BAEA67471} = {B4B6A092-ED3B-4DF2-95E0-59A7A119AF3C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {02451752-289A-4A52-9BBF-1BCB4C640289}
+	EndGlobalSection
+EndGlobal
