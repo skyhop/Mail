@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageVersion>1.1.0</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
     <VersionPrefix>0.0.1</VersionPrefix>
     <VersionPrefix Condition="'$(packageversion)' != ''">$(PackageVersion)</VersionPrefix>
     <VersionSuffix></VersionSuffix>
@@ -24,6 +24,10 @@
       - Removed dependency on WebHostBuilder
       - Fixed a typo in AddMailDispatcher
       - Removed the need to load all assemblies when trying to find a model/identifier combination
+      - Made MailSender awaitable
+      - Moved MailDispatcherOptions to options folder
+      - Moved IModelIdentifierLister to Abstractions folder
+      - Refactored the MailSender delegate to an interface, so now DI can be used for the send part
     </PackageReleaseNotes>
   </PropertyGroup>
 
