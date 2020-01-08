@@ -47,7 +47,7 @@ Samples which can be used as a reference can be found in this repository.
 2. Use the `.AddMailDispatcher()` extension method on your `IServiceCollection` as follows. Note that this library expects you to bring your own transport mechanism.
 
 ```csharp
-services.AddMailDispatpcher(builder =>
+services.AddMailDispatcher(builder =>
 {
     builder.DefaultFromAddress = new MimeKit.MailboxAddress("Email Support", "support@example.tld");
 
@@ -77,10 +77,14 @@ await _mailDispatcher.SendMail(
     to: new[] { new MailboxAddress("John Doe", "john.doe@example.tld") });
 ```
 
+# Convention based view loading
+Per default, the application tries to find all `*.Views.dll`'s found in the application base directory. It then loads all those dll's as application parts to the `IMvcCoreBuilder`. If you would like to opt-out or setup other `IMvcCoreBuilder` related things, you can use an overload:
+```csharp
+IServiceCollection AddMailDispatcher(this IServiceCollection serviceCollection, Action<MailDispatcherOptions> mailDispatcherOptionsBuilder, Action<IMvcCoreBuilder>? mvcCoreBuilderAction);
+```
+
 # Gotchas
 The following limitations are currently available. Feel free to submit a PR to fix one or more of those ☺.
 
 - This library only works with projects which target `netcoreapp3.1`. This is a limitation based on the requirements of the `Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation` dependency.
-- Instantiation of the `MailDispatcher` happens from it's own dependency container. This is due to a dependency on the `WebHostBuilder`, and to enable usage outside of an asp.net core application.
-- During instantiation we scan the output folder for assemblies ending in `.Views.dll`, and add these as an application part.
-- It is expected that a view-model is only used once within a view. We do not have code resolving multiple usages of the same viewmodel, and an exception will be thrown.
+- It is expected that a view-model is only used once within a view. The code will use the first view it encounters that has the chosen model.
