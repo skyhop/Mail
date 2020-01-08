@@ -1,6 +1,7 @@
 using HtmlAgilityPack;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Skyhop.Mail.Abstractions;
 using Skyhop.Mail.Options;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,11 +12,13 @@ namespace Skyhop.Mail
     {
         private readonly RazorViewToStringRenderer _renderer;
         private readonly MailDispatcherOptions _options;
+        private readonly IMailSender _mailSender;
 
-        public MailDispatcher(RazorViewToStringRenderer renderer, IOptions<MailDispatcherOptions> options)
+        public MailDispatcher(RazorViewToStringRenderer renderer, IOptions<MailDispatcherOptions> options, IMailSender mailSender)
         {
             _renderer = renderer;
             _options = options.Value;
+            _mailSender = mailSender;
         }
 
         public async Task SendMail<T>(
@@ -34,8 +37,7 @@ namespace Skyhop.Mail
             if (cc != default && cc.Any()) message.Cc.AddRange(cc);
             if (bcc != default && bcc.Any()) message.Bcc.AddRange(bcc);
 
-            if(_options.MailSender != null)
-                await _options.MailSender.Invoke(message);
+            await _mailSender.SendMail(message);
         }
 
         private async Task<MimeMessage> _fillMailMessage<T>(T data, MimeEntity[]? attachments = default)

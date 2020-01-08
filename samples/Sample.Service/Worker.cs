@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MimeKit;
@@ -20,6 +21,7 @@ namespace Sample.Service
         {
             _logger = logger;
             _mailDispatcher = mailDispatcher;
+
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

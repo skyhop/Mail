@@ -50,22 +50,12 @@ Samples which can be used as a reference can be found in this repository.
 services.AddMailDispatcher(builder =>
 {
     builder.DefaultFromAddress = new MimeKit.MailboxAddress("Email Support", "support@example.tld");
-
-    builder.MailSender = async message =>
-    {
-        using (var client = new SmtpClient())
-        {
-            await client.ConnectAsync("mail.example.tld", 587, false);
-            await client.AuthenticateAsync("support@example.tld", "**ExamplePassword**");
-            await client.SendAsync(message);
-            await client.DisconnectAsync(true);
-        }
-    };
 });
 ```
 
-3. Add views and viewmodels to your templating project.
-4. Use the DI container to grab a `MailDispatcher` instance. Usage from code can be as follows. After this you can send an email based on the viewmodel as follows:
+3. Add an implementation of `IMailSender` to your `IServiceCollection`. In the example project a simple Smtp implementation is included.
+4. Add views and viewmodels to your templating project.
+5. Use the DI container to grab a `MailDispatcher` instance. Usage from code can be as follows. After this you can send an email based on the viewmodel as follows:
 
 ```csharp
 await _mailDispatcher.SendMail(
@@ -88,3 +78,4 @@ The following limitations are currently available. Feel free to submit a PR to f
 
 - This library only works with projects which target `netcoreapp3.1`. This is a limitation based on the requirements of the `Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation` dependency.
 - It is expected that a view-model is only used once within a view. The code will use the first view it encounters that has the chosen model.
+- If your implementation of `IMailSender` is scoped (uses a `DbContext` for example), you can also change the scope of the `MailDispatcher` as needed. By default the `MailDispatcher` is added as a singleton, but using an overload of the `AddMailDispatcher` you can set the `ServiceLifetime` as needed.
