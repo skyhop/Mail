@@ -6,28 +6,13 @@ using Skyhop.Mail.Internal;
 using Skyhop.Mail.Options;
 using System;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IServiceCollectionExtensions
     {
         public static IServiceCollection AddMailDispatcher(this IServiceCollection serviceCollection, Action<MailDispatcherOptions> mailDispatcherOptionsBuilder, ServiceLifetime mailDispatcherLifetime = ServiceLifetime.Singleton)
-        {
-            return AddMailDispatcher(serviceCollection, mailDispatcherOptionsBuilder, mvcBuilder =>
-            {
-                var viewAssemblies = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.Views.dll")
-                    .Select(Assembly.LoadFrom)
-                    .ToArray();
-
-                foreach (var assembly in viewAssemblies)
-                {
-                    mvcBuilder.AddApplicationPart(assembly);
-                }
-            }, mailDispatcherLifetime);
-        }
+            => AddMailDispatcher(serviceCollection, mailDispatcherOptionsBuilder, mvcBuilder => mvcBuilder.AddViewsApplicationParts(), mailDispatcherLifetime);
 
         public static IServiceCollection AddMailDispatcher(this IServiceCollection serviceCollection, Action<MailDispatcherOptions> mailDispatcherOptionsBuilder, Action<IMvcCoreBuilder>? mvcCoreBuilderAction, ServiceLifetime mailDispatcherLifetime = ServiceLifetime.Singleton)
         {
