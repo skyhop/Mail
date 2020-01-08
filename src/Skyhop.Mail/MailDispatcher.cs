@@ -33,7 +33,8 @@ namespace Skyhop.Mail
             if (cc != default && cc.Any()) message.Cc.AddRange(cc);
             if (bcc != default && bcc.Any()) message.Bcc.AddRange(bcc);
 
-            _options.MailSender?.Invoke(message);
+            if(_options.MailSender != null)
+                await _options.MailSender.Invoke(message);
         }
 
         private async Task<MimeMessage> _fillMailMessage<T>(T data, MimeEntity[]? attachments = default)
