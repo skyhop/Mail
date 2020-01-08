@@ -1,22 +1,16 @@
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.ObjectPool;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace Skyhop.Mail
@@ -27,21 +21,39 @@ namespace Skyhop.Mail
     {
         private readonly IRazorViewEngine _viewEngine;
         private readonly ITempDataProvider _tempDataProvider;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly IModelIdentifierLister _viewLister;
 
         public RazorViewToStringRenderer(
             IRazorViewEngine viewEngine,
             ITempDataProvider tempDataProvider,
-            IServiceProvider serviceProvider)
+            IServiceScopeFactory serviceScopeFactory,
+            IModelIdentifierLister viewLister)
         {
             _viewEngine = viewEngine;
             _tempDataProvider = tempDataProvider;
-            _serviceProvider = serviceProvider;
+            _serviceScopeFactory = serviceScopeFactory;
+            _viewLister = viewLister;
+        }
+
+        public async Task<string?> RenderViewForModel<T>(T model)
+        {
+            var views = _viewLister.ModelIdentifiers;
+
+            foreach (var (modelType, identifier) in views)
+                if (modelType == typeof(T))
+                    return await RenderViewToStringAsync(identifier, model);
+
+            return null;
         }
 
         public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model)
         {
-            var actionContext = _getActionContext();
+            // Scope is needed for the scoped services
+            using var scope = _serviceScopeFactory.CreateScope();
+
+            var actionContext = _getActionContext(scope.ServiceProvider);
+
             var view = _findView(actionContext, viewName);
 
             using (var output = new StringWriter())
@@ -89,55 +101,13 @@ namespace Skyhop.Mail
             throw new InvalidOperationException(errorMessage);
         }
 
-        private ActionContext _getActionContext()
+        private ActionContext _getActionContext(IServiceProvider serviceProvider)
         {
             var httpContext = new DefaultHttpContext
             {
-                RequestServices = _serviceProvider
+                RequestServices = serviceProvider
             };
             return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
-        }
-
-        public static RazorViewToStringRenderer GetRenderer()
-        {
-            var services = new ServiceCollection();
-
-            var appDirectory = Directory.GetCurrentDirectory();
-
-            var webhostBuilder = new WebHostBuilder().ConfigureServices(services =>
-            {
-                services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
-                {
-                    options.FileProviders.Add(new PhysicalFileProvider(appDirectory));
-                });
-
-                services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
-
-                var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");
-                services.AddSingleton<DiagnosticListener>(diagnosticSource);
-                services.AddSingleton<DiagnosticSource>(diagnosticSource);
-
-                services.AddLogging();
-
-                var mvcBuilder = services.AddRazorPages();
-
-                Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "*.Views.dll")
-                    .Select(file => Assembly.LoadFrom(file))
-                    .ToList()
-                    .ForEach(assembly => mvcBuilder.AddApplicationPart(assembly));
-                
-                services.AddSingleton<RazorViewToStringRenderer>();
-            }).UseStartup<Startup>().Build();
-
-            return webhostBuilder.Services.GetRequiredService<RazorViewToStringRenderer>();
-        }
-
-        private class Startup
-        {
-            public void Configure()
-            {
-
-            }
         }
     }
 }

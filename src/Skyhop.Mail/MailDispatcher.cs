@@ -1,4 +1,5 @@
 using HtmlAgilityPack;
+using Microsoft.Extensions.Options;
 using MimeKit;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,10 +11,10 @@ namespace Skyhop.Mail
         private readonly RazorViewToStringRenderer _renderer;
         private readonly MailDispatcherOptions _options;
 
-        public MailDispatcher(RazorViewToStringRenderer renderer, MailDispatcherOptions options)
+        public MailDispatcher(RazorViewToStringRenderer renderer, IOptions<MailDispatcherOptions> options)
         {
             _renderer = renderer;
-            _options = options;
+            _options = options.Value;
         }
 
         public async Task<MimeMessage> GenerateMessage<T>(T data, MimeEntity[]? attachments = default) where T : MailBase
@@ -60,7 +61,7 @@ namespace Skyhop.Mail
 
         private async Task<(string HtmlBody, string TextBody)> _getBody<T>(T data)
         {
-            var htmlBody = await _renderer.GetViewForModel(data);
+            var htmlBody = await _renderer.RenderViewForModel(data);
 
             htmlBody = PreMailer.Net.PreMailer
                 .MoveCssInline(htmlBody)
