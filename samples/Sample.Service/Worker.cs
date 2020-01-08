@@ -21,7 +21,6 @@ namespace Sample.Service
         {
             _logger = logger;
             _mailDispatcher = mailDispatcher;
-
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
