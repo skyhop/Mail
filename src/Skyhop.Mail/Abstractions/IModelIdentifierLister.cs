@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Skyhop.Mail
+namespace Skyhop.Mail.Abstractions
 {
     public interface IModelIdentifierLister
     {
