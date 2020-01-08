@@ -2,7 +2,7 @@ using MimeKit;
 using System;
 using System.Threading.Tasks;
 
-namespace Skyhop.Mail
+namespace Skyhop.Mail.Options
 {
     public class MailDispatcherOptions
     {

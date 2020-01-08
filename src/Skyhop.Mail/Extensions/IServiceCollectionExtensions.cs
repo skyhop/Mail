@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Skyhop.Mail;
 using Skyhop.Mail.Internal;
+using Skyhop.Mail.Options;
 using System;
 using System.Diagnostics;
 using System.IO;

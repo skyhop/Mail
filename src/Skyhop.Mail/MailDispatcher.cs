@@ -1,6 +1,7 @@
 using HtmlAgilityPack;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using Skyhop.Mail.Options;
 using System.Linq;
 using System.Threading.Tasks;
 
