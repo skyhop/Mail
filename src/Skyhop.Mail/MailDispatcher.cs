@@ -17,7 +17,27 @@ namespace Skyhop.Mail
             _options = options.Value;
         }
 
-        public async Task<MimeMessage> GenerateMessage<T>(T data, MimeEntity[]? attachments = default) where T : MailBase
+        public async Task SendMail<T>(
+            T data,
+            MailboxAddress? from = default,
+            MailboxAddress[]? to = default,
+            MailboxAddress[]? cc = default,
+            MailboxAddress[]? bcc = default,
+            MimeEntity[]? attachments = default) where T : MailBase
+        {
+            var message = await _fillMailMessage(data, attachments);
+
+            if (from != default || _options.DefaultFromAddress != default) message.From.Add(from ?? _options.DefaultFromAddress);
+
+            if (to != default && to.Any()) message.To.AddRange(to);
+            if (cc != default && cc.Any()) message.Cc.AddRange(cc);
+            if (bcc != default && bcc.Any()) message.Bcc.AddRange(bcc);
+
+            _options.MailSender?.Invoke(message);
+        }
+
+        private async Task<MimeMessage> _fillMailMessage<T>(T data, MimeEntity[]? attachments = default)
+             where T : MailBase
         {
             var (htmlBody, textBody) = await _getBody(data);
 
@@ -32,31 +52,9 @@ namespace Skyhop.Mail
                 }
             }
 
-            var message = new MimeMessage
-            {
-                Body = data.BodyBuilder.ToMessageBody()
-            };
+            data.MailMessage.Body = data.BodyBuilder.ToMessageBody();
 
-            return message;
-        }
-
-        public async Task SendMail<T>(
-            T data,
-            MailboxAddress? from = default,
-            MailboxAddress[]? to = default,
-            MailboxAddress[]? cc = default,
-            MailboxAddress[]? bcc = default,
-            MimeEntity[]? attachments = default) where T : MailBase
-        {
-            var message = await GenerateMessage(data, attachments);
-
-            if (from != default || _options.DefaultFromAddress != default) message.From.Add(from ?? _options.DefaultFromAddress);
-
-            if (to != default && to.Any()) message.To.AddRange(to);
-            if (cc != default && cc.Any()) message.Cc.AddRange(cc);
-            if (bcc != default && bcc.Any()) message.Bcc.AddRange(bcc);
-
-            _options.MailSender?.Invoke(message);
+            return data.MailMessage;
         }
 
         private async Task<(string HtmlBody, string TextBody)> _getBody<T>(T data)
