@@ -29,10 +29,11 @@ namespace Skyhop.Mail.Internal
                     x.Identifier,
                     x.Model
                 })
-                .ToArray();
+                .Select(x => (x.Model, x.Identifier));
 
-            foreach (var view in views)
-                yield return (view.Model, view.Identifier);
+            foreach (var (model, identifier) in views)
+                if (model is object && identifier is object)
+                    yield return (model, identifier);
         }
 
         private (bool HasModel, string? Identifier, Type? Model) _getModelType(RazorCompiledItem item)
