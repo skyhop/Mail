@@ -29,23 +29,22 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IServiceCollection AddMailDispatcher(this IServiceCollection serviceCollection, Action<MailDispatcherOptions> mailDispatcherOptionsBuilder, Action<IMvcCoreBuilder>? mvcCoreBuilderAction)
         {
-            var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");
-            serviceCollection.AddSingleton(diagnosticSource);
-            serviceCollection.AddSingleton<DiagnosticSource>(diagnosticSource);
+            // Renderer + internal dependencies
+            serviceCollection.AddSingleton<RazorViewToStringRenderer>();
+            serviceCollection.AddSingleton<IModelIdentifierLister, ModelIdentifierLister>();
+            serviceCollection.AddSingleton<MailDispatcher>();
+            serviceCollection.Configure(mailDispatcherOptionsBuilder);
 
+            // Try add if not already added needed Razor dependencies
+            var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");
+            serviceCollection.TryAddSingleton(diagnosticSource);
+            serviceCollection.TryAddSingleton<DiagnosticSource>(diagnosticSource);
             serviceCollection.TryAddSingleton<IWebHostEnvironment, WebHostEnvironmentShell>();
 
-            serviceCollection.AddSingleton<RazorViewToStringRenderer>();
-
-            serviceCollection.AddSingleton<IModelIdentifierLister, ModelIdentifierLister>();
-
-            serviceCollection.Configure(mailDispatcherOptionsBuilder);
-            serviceCollection.AddSingleton<MailDispatcher>();
-
+            // Minimum needed MVC
             var mvcCoreBuilder = serviceCollection.AddMvcCore()
                 .AddViews()
                 .AddRazorViewEngine();
-
             mvcCoreBuilderAction?.Invoke(mvcCoreBuilder);
 
             return serviceCollection;
