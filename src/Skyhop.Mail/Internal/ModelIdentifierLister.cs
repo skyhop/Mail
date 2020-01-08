@@ -24,11 +24,6 @@ namespace Skyhop.Mail.Internal
             var views = feature.ViewDescriptors
                 .Select(x => _getModelType(x.Item))
                 .Where(x => x.HasModel)
-                .Select(x => new
-                {
-                    x.Identifier,
-                    x.Model
-                })
                 .Select(x => (x.Model, x.Identifier));
 
             foreach (var (model, identifier) in views)
