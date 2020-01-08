@@ -1,7 +1,6 @@
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Skyhop.Mail;
 
 namespace Sample.Service
 {
@@ -16,7 +15,7 @@ namespace Sample.Service
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddMailDispatpcher(builder =>
+                    services.AddMailDispatcher(builder =>
                     {
                         builder.DefaultFromAddress = new MimeKit.MailboxAddress("Email Support", "support@example.tld");
 
