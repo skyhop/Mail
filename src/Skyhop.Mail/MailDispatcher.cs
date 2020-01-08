@@ -49,13 +49,13 @@ namespace Skyhop.Mail
         {
             var message = await GenerateMessage(data, attachments);
 
-            if (from != default || _options.DefaultFromAddress != default) data.MailMessage.From.Add(from ?? _options.DefaultFromAddress);
+            if (from != default || _options.DefaultFromAddress != default) message.From.Add(from ?? _options.DefaultFromAddress);
 
-            if (to != default && to.Any()) data.MailMessage.To.AddRange(to);
-            if (cc != default && cc.Any()) data.MailMessage.Cc.AddRange(cc);
-            if (bcc != default && bcc.Any()) data.MailMessage.Bcc.AddRange(bcc);
+            if (to != default && to.Any()) message.To.AddRange(to);
+            if (cc != default && cc.Any()) message.Cc.AddRange(cc);
+            if (bcc != default && bcc.Any()) message.Bcc.AddRange(bcc);
 
-            _options.MailSender?.Invoke(data.MailMessage);
+            _options.MailSender?.Invoke(message);
         }
 
         private async Task<(string HtmlBody, string TextBody)> _getBody<T>(T data)
