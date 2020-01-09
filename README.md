@@ -68,10 +68,16 @@ await _mailDispatcher.SendMail(
 ```
 
 # Convention based view loading
-Per default, the application tries to find all `*.Views.dll`'s found in the application base directory. It then loads all those dll's as application parts to the `IMvcCoreBuilder`. If you would like to opt-out or setup other `IMvcCoreBuilder` related things, you can use an overload:
+If you would like to load all views in `*.Views.dll`'s  you can use an overload `AddMailDispatcher`, this overload enables the extension of `IMvcCoreBuilder`. We created an extension which will find and load all `*.Views.dll` files as application parts:
+
 ```csharp
-IServiceCollection AddMailDispatcher(this IServiceCollection serviceCollection, Action<MailDispatcherOptions> mailDispatcherOptionsBuilder, Action<IMvcCoreBuilder>? mvcCoreBuilderAction);
+services.AddMailDispatcher(options =>
+{
+    options.DefaultFromAddress = new MailboxAddress("Email Support", "support@example.tld");
+},
+builder => builder.AddViewsApplicationParts());
 ```
+
 
 # Gotchas
 The following limitations are currently available. Feel free to submit a PR to fix one or more of those ☺.

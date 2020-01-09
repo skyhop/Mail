@@ -11,9 +11,6 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IServiceCollectionExtensions
     {
-        public static IServiceCollection AddMailDispatcher(this IServiceCollection serviceCollection, Action<MailDispatcherOptions> mailDispatcherOptionsBuilder, ServiceLifetime mailDispatcherLifetime = ServiceLifetime.Singleton)
-            => AddMailDispatcher(serviceCollection, mailDispatcherOptionsBuilder, mvcBuilder => mvcBuilder.AddViewsApplicationParts(), mailDispatcherLifetime);
-
         public static IServiceCollection AddMailDispatcher(this IServiceCollection serviceCollection, Action<MailDispatcherOptions> mailDispatcherOptionsBuilder, Action<IMvcCoreBuilder>? mvcCoreBuilderAction, ServiceLifetime mailDispatcherLifetime = ServiceLifetime.Singleton)
         {
             // Renderer + internal dependencies

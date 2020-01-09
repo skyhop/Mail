@@ -17,10 +17,11 @@ namespace Sample.Service
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddSingleton<IMailSender, SmtpMailSender>(); // <== Insert your own implementation
-                    services.AddMailDispatcher(builder =>
-                    {
-                        builder.DefaultFromAddress = new MailboxAddress("Email Support", "support@example.tld");
-                    });
+                    services.AddMailDispatcher(options =>
+                        {
+                            options.DefaultFromAddress = new MailboxAddress("Email Support", "support@example.tld");
+                        },
+                        builder => builder.AddViewsApplicationParts()); // Load all *.Views.dll assemblies as application parts
                     services.AddHostedService<Worker>();
                 });
     }
