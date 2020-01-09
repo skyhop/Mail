@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
     <VersionPrefix>0.0.1</VersionPrefix>
     <VersionPrefix Condition="'$(packageversion)' != ''">$(PackageVersion)</VersionPrefix>
     <VersionSuffix></VersionSuffix>
@@ -19,7 +19,16 @@
     <Description>A library smoothing email generation from .NET code, by enforcing a strong boundary between the template, and code rendering the template.</Description>
     <PackageProjectUrl>https://github.com/skyhop/Mail</PackageProjectUrl>
     <RepositoryUrl>https://github.com/skyhop/Mail</RepositoryUrl>
-    <PackageReleaseNotes>Initial NuGet release</PackageReleaseNotes>
+    <PackageReleaseNotes>
+      - Add bug fixed which resulted in email having no body,
+      - Removed dependency on WebHostBuilder
+      - Fixed a typo in AddMailDispatcher
+      - Removed the need to load all assemblies when trying to find a model/identifier combination
+      - Made MailSender awaitable
+      - Moved MailDispatcherOptions to options folder
+      - Moved IModelIdentifierLister to Abstractions folder
+      - Refactored the MailSender delegate to an interface, so now DI can be used for the send part
+    </PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>

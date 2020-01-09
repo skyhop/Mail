@@ -22,7 +22,7 @@
 
   <PropertyGroup>
     <Company>Skyhop</Company>
-    <Authors>Corstian Boerman</Authors>
+    <Authors>Corstian Boerman, Gerard Gunnewijk</Authors>
     <Copyright>Copyright © $(Company) $([System.DateTime]::Now.ToString('yyyy'))</Copyright>
     <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>

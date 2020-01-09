@@ -1,5 +1,8 @@
 using HtmlAgilityPack;
+using Microsoft.Extensions.Options;
 using MimeKit;
+using Skyhop.Mail.Abstractions;
+using Skyhop.Mail.Options;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,14 +12,36 @@ namespace Skyhop.Mail
     {
         private readonly RazorViewToStringRenderer _renderer;
         private readonly MailDispatcherOptions _options;
+        private readonly IMailSender _mailSender;
 
-        public MailDispatcher(RazorViewToStringRenderer renderer, MailDispatcherOptions options)
+        public MailDispatcher(RazorViewToStringRenderer renderer, IOptions<MailDispatcherOptions> options, IMailSender mailSender)
         {
             _renderer = renderer;
-            _options = options;
+            _options = options.Value;
+            _mailSender = mailSender;
         }
 
-        public async Task<MimeMessage> GenerateMessage<T>(T data, MimeEntity[]? attachments = default) where T : MailBase
+        public async Task SendMail<T>(
+            T data,
+            MailboxAddress? from = default,
+            MailboxAddress[]? to = default,
+            MailboxAddress[]? cc = default,
+            MailboxAddress[]? bcc = default,
+            MimeEntity[]? attachments = default) where T : MailBase
+        {
+            var message = await _fillMailMessage(data, attachments);
+
+            if (from != default || _options.DefaultFromAddress != default) message.From.Add(from ?? _options.DefaultFromAddress);
+
+            if (to != default && to.Any()) message.To.AddRange(to);
+            if (cc != default && cc.Any()) message.Cc.AddRange(cc);
+            if (bcc != default && bcc.Any()) message.Bcc.AddRange(bcc);
+
+            await _mailSender.SendMail(message);
+        }
+
+        private async Task<MimeMessage> _fillMailMessage<T>(T data, MimeEntity[]? attachments = default)
+             where T : MailBase
         {
             var (htmlBody, textBody) = await _getBody(data);
 
@@ -31,36 +56,14 @@ namespace Skyhop.Mail
                 }
             }
 
-            var message = new MimeMessage
-            {
-                Body = data.BodyBuilder.ToMessageBody()
-            };
+            data.MailMessage.Body = data.BodyBuilder.ToMessageBody();
 
-            return message;
-        }
-
-        public async Task SendMail<T>(
-            T data,
-            MailboxAddress? from = default,
-            MailboxAddress[]? to = default,
-            MailboxAddress[]? cc = default,
-            MailboxAddress[]? bcc = default,
-            MimeEntity[]? attachments = default) where T : MailBase
-        {
-            var message = await GenerateMessage(data, attachments);
-
-            if (from != default || _options.DefaultFromAddress != default) data.MailMessage.From.Add(from ?? _options.DefaultFromAddress);
-
-            if (to != default && to.Any()) data.MailMessage.To.AddRange(to);
-            if (cc != default && cc.Any()) data.MailMessage.Cc.AddRange(cc);
-            if (bcc != default && bcc.Any()) data.MailMessage.Bcc.AddRange(bcc);
-
-            _options.MailSender?.Invoke(data.MailMessage);
+            return data.MailMessage;
         }
 
         private async Task<(string HtmlBody, string TextBody)> _getBody<T>(T data)
         {
-            var htmlBody = await _renderer.GetViewForModel(data);
+            var htmlBody = await _renderer.RenderViewForModel(data);
 
             htmlBody = PreMailer.Net.PreMailer
                 .MoveCssInline(htmlBody)

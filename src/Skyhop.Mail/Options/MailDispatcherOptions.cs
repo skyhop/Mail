@@ -1,11 +1,9 @@
 using MimeKit;
-using System;
 
-namespace Skyhop.Mail
+namespace Skyhop.Mail.Options
 {
     public class MailDispatcherOptions
     {
         public MailboxAddress? DefaultFromAddress { get; set; }
-        public Action<MimeMessage>? MailSender { get; set; }
     }
 }

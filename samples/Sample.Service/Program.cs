@@ -1,7 +1,7 @@
-using MailKit.Net.Smtp;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Skyhop.Mail;
+using MimeKit;
+using Skyhop.Mail.Abstractions;
 
 namespace Sample.Service
 {
@@ -16,21 +16,12 @@ namespace Sample.Service
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddMailDispatpcher(builder =>
-                    {
-                        builder.DefaultFromAddress = new MimeKit.MailboxAddress("Email Support", "support@example.tld");
-
-                        builder.MailSender = async message =>
+                    services.AddSingleton<IMailSender, SmtpMailSender>(); // <== Insert your own implementation
+                    services.AddMailDispatcher(options =>
                         {
-                            using (var client = new SmtpClient())
-                            {
-                                await client.ConnectAsync("mail.example.tld", 587, false);
-                                await client.AuthenticateAsync("support@example.tld", "**ExamplePassword**");
-                                await client.SendAsync(message);
-                                await client.DisconnectAsync(true);
-                            }
-                        };
-                    });
+                            options.DefaultFromAddress = new MailboxAddress("Email Support", "support@example.tld");
+                        },
+                        builder => builder.AddViewsApplicationParts()); // Load all *.Views.dll assemblies as application parts
                     services.AddHostedService<Worker>();
                 });
     }
