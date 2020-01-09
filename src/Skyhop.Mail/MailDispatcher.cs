@@ -64,7 +64,11 @@ namespace Skyhop.Mail
 
             return new MimeMessage()
             {
-                Body = data.BodyBuilder.ToMessageBody()
+                Body = data.BodyBuilder.ToMessageBody(),
+                Subject = data.Subject,
+                Priority = data.Priority,
+                XPriority = data.XPriority,
+                Importance = data.Importance
             };
         }
 
