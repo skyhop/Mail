@@ -62,9 +62,10 @@ namespace Skyhop.Mail
                 }
             }
 
-            data.MailMessage.Body = data.BodyBuilder.ToMessageBody();
-
-            return data.MailMessage;
+            return new MimeMessage()
+            {
+                Body = data.BodyBuilder.ToMessageBody()
+            };
         }
 
         private async Task<(string HtmlBody, string TextBody)> _getBody<T>(T data)
