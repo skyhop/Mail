@@ -12,8 +12,11 @@ This core principle behind this library is based on several prior blog posts:
 There is a blog post which extensively describes the approach and background of this library [available **over here**](http://corstianboerman.com/2020-01-07/sending-transactional-emails-from-asp-net-core.html).
 
 # Installation
+The NuGet hosted package is available. 
 
-The NuGet hosted package is available [over here](https://www.nuget.org/packages/Skyhop.Mail). Install it using the following commands:
+[![Nuget](https://img.shields.io/nuget/v/Skyhop.Mail?label=Skyhop.Mail)](https://www.nuget.org/packages/Skyhop.Mail)
+
+Install it using the following commands:
 
 **Using the NuGet Package Manager**
 ```
