@@ -87,4 +87,3 @@ The following limitations are currently available. Feel free to submit a PR to f
 
 - This library only works with projects which target `netcoreapp3.1`. This is a limitation based on the requirements of the `Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation` dependency.
 - It is expected that a view-model is only used once within a view. The code will use the first view it encounters that has the chosen model.
-- If your implementation of `IMailSender` is scoped (uses a `DbContext` for example), you can also change the scope of the `MailDispatcher` as needed. By default the `MailDispatcher` is added as a singleton, but using an overload of the `AddMailDispatcher` you can set the `ServiceLifetime` as needed.
