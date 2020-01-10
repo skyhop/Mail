@@ -10,12 +10,21 @@ using System.Threading.Tasks;
 
 namespace Skyhop.Mail
 {
+    /// <summary>
+    /// Class used to generate and send emails
+    /// </summary>
     public class MailDispatcher
     {
         private readonly RazorViewToStringRenderer _renderer;
         private readonly MailDispatcherOptions _options;
         private readonly IServiceScopeFactory _scopeFactory;
 
+        /// <summary>
+        /// Constructor for <see cref="MailDispatcher"/>
+        /// </summary>
+        /// <param name="renderer">The renderer used to render the Razor view to html</param>
+        /// <param name="options">The <see cref="MailDispatcherOptions"/> used to further setup the <see cref="MailDispatcher"/></param>
+        /// <param name="scopeFactory">Factory used to create a scope to resolve the <see cref="IMailSender"/></param>
         public MailDispatcher(RazorViewToStringRenderer renderer, IOptions<MailDispatcherOptions> options, IServiceScopeFactory scopeFactory)
         {
             _renderer = renderer;
@@ -23,6 +32,16 @@ namespace Skyhop.Mail
             _scopeFactory = scopeFactory;
         }
 
+        /// <summary>
+        /// Sends the email
+        /// </summary>
+        /// <typeparam name="T">The type of the model carrying the payload of the mail.</typeparam>
+        /// <param name="data">The message payload</param>
+        /// <param name="to">The addresses to which the mail must be sent</param>
+        /// <param name="cc">The addresses to which the mail must be cc'ed.</param>
+        /// <param name="bcc">The addresses to which the mail must be bcc'ed.</param>
+        /// <param name="from">The addresses from which the mail is sent, can be null, but then a DefaultFromAddress in <seealso cref="MailDispatcherOptions"/> must be set.</param>
+        /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
         public async Task SendMail<T>(
             T data,
             MailboxAddress[] to,
