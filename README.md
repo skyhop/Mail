@@ -14,7 +14,7 @@ There is a blog post which extensively describes the approach and background of 
 # Installation
 The NuGet hosted package is available. 
 
-[![Nuget](https://img.shields.io/nuget/v/Skyhop.Mail?label=Skyhop.Mail)](https://www.nuget.org/packages/Skyhop.Mail)
+[![Nuget](https://img.shields.io/nuget/vpre/Skyhop.Mail?label=Skyhop.Mail)](https://www.nuget.org/packages/Skyhop.Mail)
 
 Install it using the following commands:
 
