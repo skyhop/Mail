@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using MimeKit;
 using Skyhop.Mail.Abstractions;
 using Skyhop.Mail.Options;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,19 +24,24 @@ namespace Skyhop.Mail
 
         public async Task SendMail<T>(
             T data,
-            MailboxAddress? from = default,
-            MailboxAddress[]? to = default,
+            MailboxAddress[] to,
             MailboxAddress[]? cc = default,
             MailboxAddress[]? bcc = default,
+            MailboxAddress? from = default,
             MimeEntity[]? attachments = default) where T : MailBase
         {
+            from ??= _options.DefaultFromAddress ?? throw new ArgumentException(nameof(from), $"Either the parameter {nameof(from)} must be set or the {nameof(_options.DefaultFromAddress)} must be set.");
+            if (to.Length == 0)
+                throw new ArgumentException(nameof(to), $"There must be atleast one mail address in the {nameof(to)} parameter.");
+
             var message = await _fillMailMessage(data, attachments);
 
-            if (from != default || _options.DefaultFromAddress != default) message.From.Add(from ?? _options.DefaultFromAddress);
-
-            if (to != default && to.Any()) message.To.AddRange(to);
-            if (cc != default && cc.Any()) message.Cc.AddRange(cc);
-            if (bcc != default && bcc.Any()) message.Bcc.AddRange(bcc);
+            message.From.Add(from);
+            message.To.AddRange(to);
+            if (cc != default && cc.Any())
+                message.Cc.AddRange(cc);
+            if (bcc != default && bcc.Any())
+                message.Bcc.AddRange(bcc);
 
             await _mailSender.SendMail(message);
         }
@@ -56,9 +62,14 @@ namespace Skyhop.Mail
                 }
             }
 
-            data.MailMessage.Body = data.BodyBuilder.ToMessageBody();
-
-            return data.MailMessage;
+            return new MimeMessage()
+            {
+                Body = data.BodyBuilder.ToMessageBody(),
+                Subject = data.Subject,
+                Priority = data.Priority,
+                XPriority = data.XPriority,
+                Importance = data.Importance
+            };
         }
 
         private async Task<(string HtmlBody, string TextBody)> _getBody<T>(T data)
