@@ -27,14 +27,13 @@ namespace Skyhop.Mail
             MailboxAddress[] to,
             MailboxAddress[]? cc = default,
             MailboxAddress[]? bcc = default,
-            MailboxAddress? from = default,
-            MimeEntity[]? attachments = default) where T : MailBase
+            MailboxAddress? from = default) where T : MailBase
         {
             from ??= _options.DefaultFromAddress ?? throw new ArgumentException(nameof(from), $"Either the parameter {nameof(from)} must be set or the {nameof(_options.DefaultFromAddress)} must be set.");
             if (to.Length == 0)
                 throw new ArgumentException(nameof(to), $"There must be atleast one mail address in the {nameof(to)} parameter.");
 
-            var message = await _fillMailMessage(data, attachments);
+            var message = await _fillMailMessage(data);
 
             message.From.Add(from);
             message.To.AddRange(to);
@@ -46,21 +45,13 @@ namespace Skyhop.Mail
             await _mailSender.SendMail(message);
         }
 
-        private async Task<MimeMessage> _fillMailMessage<T>(T data, MimeEntity[]? attachments = default)
+        private async Task<MimeMessage> _fillMailMessage<T>(T data)
              where T : MailBase
         {
             var (htmlBody, textBody) = await _getBody(data);
 
             data.BodyBuilder.HtmlBody = htmlBody;
             data.BodyBuilder.TextBody = textBody;
-
-            if (attachments != default && attachments.Any())
-            {
-                foreach (var attachment in attachments)
-                {
-                    data.BodyBuilder.Attachments.Add(attachment);
-                }
-            }
 
             return new MimeMessage()
             {
