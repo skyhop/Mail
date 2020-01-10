@@ -11,15 +11,13 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class IServiceCollectionExtensions
     {
-        public static IServiceCollection AddMailDispatcher(this IServiceCollection serviceCollection, Action<MailDispatcherOptions> mailDispatcherOptionsBuilder, Action<IMvcCoreBuilder>? mvcCoreBuilderAction, ServiceLifetime mailDispatcherLifetime = ServiceLifetime.Singleton)
+        public static IServiceCollection AddMailDispatcher(this IServiceCollection serviceCollection, Action<MailDispatcherOptions> mailDispatcherOptionsBuilder, Action<IMvcCoreBuilder>? mvcCoreBuilderAction)
         {
             // Renderer + internal dependencies
             serviceCollection.AddSingleton<RazorViewToStringRenderer>();
             serviceCollection.AddSingleton<IModelIdentifierLister, ModelIdentifierLister>();
+            serviceCollection.AddSingleton<MailDispatcher>();
             serviceCollection.Configure(mailDispatcherOptionsBuilder);
-
-            // Use the lifetime the end-user chosen, in case their IMailSender implementation needs to be scoped
-            serviceCollection.Add(new ServiceDescriptor(typeof(MailDispatcher), typeof(MailDispatcher), mailDispatcherLifetime));
 
             // Try add if not already added needed Razor dependencies
             var diagnosticSource = new DiagnosticListener("Microsoft.AspNetCore");

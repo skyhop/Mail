@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageVersion>3.0.0-rc1</PackageVersion>
+    <PackageVersion>3.0.0-rc2</PackageVersion>
     <VersionPrefix>0.0.1</VersionPrefix>
     <VersionPrefix Condition="'$(packageversion)' != ''">$(PackageVersion)</VersionPrefix>
     <VersionSuffix></VersionSuffix>
@@ -20,8 +20,7 @@
     <PackageProjectUrl>https://github.com/skyhop/Mail</PackageProjectUrl>
     <RepositoryUrl>https://github.com/skyhop/Mail</RepositoryUrl>
     <PackageReleaseNotes>
-      - Simplified MailBase class
-      - Removed attachments from SendMail call
+      - Removed overload for scope definition. It now always works with a scoped IMailSender
     </PackageReleaseNotes>
   </PropertyGroup>
 

@@ -1,4 +1,5 @@
 using HtmlAgilityPack;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Skyhop.Mail.Abstractions;
@@ -13,13 +14,13 @@ namespace Skyhop.Mail
     {
         private readonly RazorViewToStringRenderer _renderer;
         private readonly MailDispatcherOptions _options;
-        private readonly IMailSender _mailSender;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public MailDispatcher(RazorViewToStringRenderer renderer, IOptions<MailDispatcherOptions> options, IMailSender mailSender)
+        public MailDispatcher(RazorViewToStringRenderer renderer, IOptions<MailDispatcherOptions> options, IServiceScopeFactory scopeFactory)
         {
             _renderer = renderer;
             _options = options.Value;
-            _mailSender = mailSender;
+            _scopeFactory = scopeFactory;
         }
 
         public async Task SendMail<T>(
@@ -42,7 +43,9 @@ namespace Skyhop.Mail
             if (bcc != default && bcc.Any())
                 message.Bcc.AddRange(bcc);
 
-            await _mailSender.SendMail(message);
+            using var scope = _scopeFactory.CreateScope();
+            var mailSender = scope.ServiceProvider.GetRequiredService<IMailSender>();
+            await mailSender.SendMail(message);
         }
 
         private async Task<MimeMessage> _renderModelToMimeMessage<T>(T data)
