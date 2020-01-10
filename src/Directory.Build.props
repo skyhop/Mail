@@ -12,8 +12,4 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\Directory.Build.props" />
 
-  <PropertyGroup>
-    <NoWarn>CS1591</NoWarn>
-  </PropertyGroup>
-
 </Project>

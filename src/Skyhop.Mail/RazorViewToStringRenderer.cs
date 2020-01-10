@@ -16,8 +16,12 @@ using System.Threading.Tasks;
 
 namespace Skyhop.Mail
 {
-    // Code from: https://github.com/aspnet/Entropy/blob/master/samples/Mvc.RenderViewToString/RazorViewToStringRenderer.cs
-
+    /// <summary>
+    /// An independent Razor view to string renderer
+    /// </summary>
+    /// <remarks>
+    /// Based upon code from: https://github.com/aspnet/Entropy/blob/master/samples/Mvc.RenderViewToString/RazorViewToStringRenderer.cs
+    /// </remarks>
     public class RazorViewToStringRenderer
     {
         private readonly IRazorViewEngine _viewEngine;
@@ -25,6 +29,13 @@ namespace Skyhop.Mail
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private readonly IModelIdentifierLister _viewLister;
 
+        /// <summary>
+        /// Constructor for <see cref="RazorViewToStringRenderer"/>
+        /// </summary>
+        /// <param name="viewEngine">View engine used to find views</param>
+        /// <param name="tempDataProvider">TempDataProvider used for <seealso cref="ViewContext"/> construction</param>
+        /// <param name="serviceScopeFactory">The <seealso cref="IServiceScopeFactory"/> used to create a scope to resolve web/razor services used for view rendering</param>
+        /// <param name="viewLister">The <seealso cref="IModelIdentifierLister"/> used to make model to view identifier lookups</param>
         public RazorViewToStringRenderer(
             IRazorViewEngine viewEngine,
             ITempDataProvider tempDataProvider,
@@ -37,6 +48,13 @@ namespace Skyhop.Mail
             _viewLister = viewLister;
         }
 
+        /// <summary>
+        /// Render a model to a html <see cref="string"/>
+        /// </summary>
+        /// <typeparam name="T">The type of model to render</typeparam>
+        /// <param name="model">The model to render</param>
+        /// <returns>The rendered string</returns>
+        /// <remarks>Returns null if a suitable views could not be found.</remarks>
         public async Task<string?> RenderViewForModel<T>(T model)
         {
             var views = _viewLister.ModelIdentifiers;
@@ -48,6 +66,13 @@ namespace Skyhop.Mail
             return null;
         }
 
+        /// <summary>
+        /// Renders a view based on the view identifier
+        /// </summary>
+        /// <typeparam name="TModel">The model type used in the view</typeparam>
+        /// <param name="viewName">The view identifier</param>
+        /// <param name="model">The model used in the view</param>
+        /// <returns>The rendered view</returns>
         public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model)
         {
             // Scope is needed for the scoped services
