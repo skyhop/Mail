@@ -21,6 +21,7 @@
     <RepositoryUrl>https://github.com/skyhop/Mail</RepositoryUrl>
     <PackageReleaseNotes>
       - Simplified MailBase class
+      - Removed attachments from SendMail call
     </PackageReleaseNotes>
   </PropertyGroup>
 
