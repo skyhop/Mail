@@ -22,6 +22,7 @@
     <PackageReleaseNotes>
       - Added XML comments
       - Made the mvcCoreBuilderAction in the AddMailDispatcher optional again
+      - Made the mailDispatcherOptionsBuilder in the AddMailDispatcher optional again
     </PackageReleaseNotes>
   </PropertyGroup>
 
