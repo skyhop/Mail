@@ -20,7 +20,7 @@ namespace Skyhop.Mail
     /// An independent Razor view to string renderer
     /// </summary>
     /// <remarks>
-    /// Based upon code from: https://github.com/aspnet/Entropy/blob/master/samples/Mvc.RenderViewToString/RazorViewToStringRenderer.cs
+    /// Based upon code from: https://github.com/aspnet/Entropy/blob/93ee2cf54eb700c4bf8ad3251f627c8f1a07fb17/samples/Mvc.RenderViewToString/RazorViewToStringRenderer.cs
     /// </remarks>
     public class RazorViewToStringRenderer
     {
