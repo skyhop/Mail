@@ -9,7 +9,7 @@ namespace Skyhop.Mail.Abstractions
     public interface IModelIdentifierLister
     {
         /// <summary>
-        /// A collection of ModelTyps and the view identifiers that belong to them.
+        /// A collection of ModelTypes and the view identifiers that belong to them.
         /// </summary>
         IEnumerable<(Type ModelType, string Identifier)> ModelIdentifiers { get; }
     }
