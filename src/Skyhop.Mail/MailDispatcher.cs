@@ -33,7 +33,7 @@ namespace Skyhop.Mail
             if (to.Length == 0)
                 throw new ArgumentException(nameof(to), $"There must be atleast one mail address in the {nameof(to)} parameter.");
 
-            var message = await _fillMailMessage(data);
+            var message = await _renderModelToMimeMessage(data);
 
             message.From.Add(from);
             message.To.AddRange(to);
@@ -45,7 +45,7 @@ namespace Skyhop.Mail
             await _mailSender.SendMail(message);
         }
 
-        private async Task<MimeMessage> _fillMailMessage<T>(T data)
+        private async Task<MimeMessage> _renderModelToMimeMessage<T>(T data)
              where T : MailBase
         {
             var (htmlBody, textBody) = await _getBody(data);
