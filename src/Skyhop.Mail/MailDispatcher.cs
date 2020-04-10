@@ -41,13 +41,15 @@ namespace Skyhop.Mail
         /// <param name="cc">The addresses to which the mail must be cc'ed.</param>
         /// <param name="bcc">The addresses to which the mail must be bcc'ed.</param>
         /// <param name="from">The addresses from which the mail is sent, can be null, but then a DefaultFromAddress in <seealso cref="MailDispatcherOptions"/> must be set.</param>
+        /// <param name="replyTo">Adds the Reply-To header to the message showing the preferred addresses to which a reply should be sent.</param>
         /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
         public async Task SendMail<T>(
             T data,
             MailboxAddress[] to,
             MailboxAddress[]? cc = default,
             MailboxAddress[]? bcc = default,
-            MailboxAddress? from = default) where T : MailBase
+            MailboxAddress? from = default,
+            MailboxAddress[]? replyTo = default) where T : MailBase
         {
             from ??= _options.DefaultFromAddress ?? throw new ArgumentException(nameof(from), $"Either the parameter {nameof(from)} must be set or the {nameof(_options.DefaultFromAddress)} must be set.");
             if (to.Length == 0)
@@ -61,6 +63,8 @@ namespace Skyhop.Mail
                 message.Cc.AddRange(cc);
             if (bcc != default && bcc.Any())
                 message.Bcc.AddRange(bcc);
+            if (replyTo != default && replyTo.Any())
+                message.ReplyTo.AddRange(replyTo);
 
             using var scope = _scopeFactory.CreateScope();
             var mailSender = scope.ServiceProvider.GetRequiredService<IMailSender>();
