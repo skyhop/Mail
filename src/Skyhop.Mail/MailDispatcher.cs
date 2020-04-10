@@ -32,7 +32,7 @@ namespace Skyhop.Mail
             _scopeFactory = scopeFactory;
         }
 
-        /// <summary>
+                /// <summary>
         /// Sends the email
         /// </summary>
         /// <typeparam name="T">The type of the model carrying the payload of the mail.</typeparam>
@@ -73,23 +73,43 @@ namespace Skyhop.Mail
         /// <param name="data">The message payload</param>
         /// <param name="transformMessage">An action that can be used to set the different properties on the <seealso cref="MimeMessage"/>. The To and From properties must be set.</param>
         /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
-        public async Task SendMail<T>(
+        public Task SendMail<T>(
             T data,
             Action<T, MimeMessage> transformMessage) where T : MailBase
         {
+            Func<T, MimeMessage, Task> asyncTransform = (d, m) =>
+            {
+                transformMessage(d, m);
+                return Task.CompletedTask;
+            };
+
+            return SendMail(data, asyncTransform);
+        }
+
+        /// <summary>
+        /// Sends the email
+        /// </summary>
+        /// <typeparam name="T">The type of the model carrying the payload of the mail.</typeparam>
+        /// <param name="data">The message payload</param>
+        /// <param name="transformMessage">An async action that can be used to set the different properties on the <seealso cref="MimeMessage"/>. The To and From properties must be set.</param>
+        /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
+        public async Task SendMail<T>(
+            T data,
+            Func<T, MimeMessage, Task> transformMessage) where T : MailBase
+        {
             var message = await _renderModelToMimeMessage(data);
 
-            transformMessage?.Invoke(data, message);
-            if ((message.To?.Count ?? 0) == 0)
+            await transformMessage.Invoke(data, message);
+            if (( message.To?.Count ?? 0 ) == 0)
                 throw new ArgumentException($"The {nameof(message.To)} parameter must be set in the {nameof(transformMessage)} action.");
-            if ((message.From?.Count ?? 0) == 0)
+            if (( message.From?.Count ?? 0 ) == 0)
                 throw new ArgumentException($"The {nameof(message.From)} parameter must be set in the {nameof(transformMessage)} action.");
 
             using var scope = _scopeFactory.CreateScope();
             var mailSender = scope.ServiceProvider.GetRequiredService<IMailSender>();
             await mailSender.SendMail(message);
         }
-
+        
         private async Task<MimeMessage> _renderModelToMimeMessage<T>(T data)
              where T : MailBase
         {
