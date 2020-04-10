@@ -41,30 +41,49 @@ namespace Skyhop.Mail
         /// <param name="cc">The addresses to which the mail must be cc'ed.</param>
         /// <param name="bcc">The addresses to which the mail must be bcc'ed.</param>
         /// <param name="from">The addresses from which the mail is sent, can be null, but then a DefaultFromAddress in <seealso cref="MailDispatcherOptions"/> must be set.</param>
-        /// <param name="replyTo">Adds the Reply-To header to the message showing the preferred addresses to which a reply should be sent.</param>
         /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
-        public async Task SendMail<T>(
+        public Task SendMail<T>(
             T data,
             MailboxAddress[] to,
             MailboxAddress[]? cc = default,
             MailboxAddress[]? bcc = default,
-            MailboxAddress? from = default,
-            MailboxAddress[]? replyTo = default) where T : MailBase
+            MailboxAddress? from = default) where T : MailBase
         {
             from ??= _options.DefaultFromAddress ?? throw new ArgumentException(nameof(from), $"Either the parameter {nameof(from)} must be set or the {nameof(_options.DefaultFromAddress)} must be set.");
             if (to.Length == 0)
                 throw new ArgumentException(nameof(to), $"There must be atleast one mail address in the {nameof(to)} parameter.");
 
+            Action<T, MimeMessage> messageTransform = (d, m) =>
+            {
+                m.From.Add(from);
+                m.To.AddRange(to);
+                if (cc != default && cc.Any())
+                    m.Cc.AddRange(cc);
+                if (bcc != default && bcc.Any())
+                    m.Bcc.AddRange(bcc);
+            };
+
+            return SendMail(data, messageTransform);
+        }
+
+        /// <summary>
+        /// Sends the email
+        /// </summary>
+        /// <typeparam name="T">The type of the model carrying the payload of the mail.</typeparam>
+        /// <param name="data">The message payload</param>
+        /// <param name="transformMessage">An action that can be used to set the different properties on the <seealso cref="MimeMessage"/>. The To and From properties must be set.</param>
+        /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
+        public async Task SendMail<T>(
+            T data,
+            Action<T, MimeMessage> transformMessage) where T : MailBase
+        {
             var message = await _renderModelToMimeMessage(data);
 
-            message.From.Add(from);
-            message.To.AddRange(to);
-            if (cc != default && cc.Any())
-                message.Cc.AddRange(cc);
-            if (bcc != default && bcc.Any())
-                message.Bcc.AddRange(bcc);
-            if (replyTo != default && replyTo.Any())
-                message.ReplyTo.AddRange(replyTo);
+            transformMessage?.Invoke(data, message);
+            if ((message.To?.Count ?? 0) == 0)
+                throw new ArgumentException($"The {nameof(message.To)} parameter must be set in the {nameof(transformMessage)} action.");
+            if ((message.From?.Count ?? 0) == 0)
+                throw new ArgumentException($"The {nameof(message.From)} parameter must be set in the {nameof(transformMessage)} action.");
 
             using var scope = _scopeFactory.CreateScope();
             var mailSender = scope.ServiceProvider.GetRequiredService<IMailSender>();
