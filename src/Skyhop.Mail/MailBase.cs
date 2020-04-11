@@ -1,4 +1,7 @@
 using MimeKit;
+using Skyhop.Mail.Abstractions;
+using System;
+using System.Threading.Tasks;
 
 namespace Skyhop.Mail
 {
@@ -59,5 +62,13 @@ namespace Skyhop.Mail
         /// The body builder used for the <see cref="Attachments"/>, <see cref="LinkedResources"/>, Html body and text body of the message.
         /// </summary>
         protected internal BodyBuilder BodyBuilder { get; }
+
+        /// <summary>
+        /// A transform that can be used to update message headers and/or content before sending the message.
+        /// </summary>
+        /// <remarks>
+        /// This async method will be called after rendering, but before sending the message.
+        /// </remarks>
+        public Func<IMessageContent, Task> MessageTransform { get; set; } = _ => Task.CompletedTask;
     }
 }
