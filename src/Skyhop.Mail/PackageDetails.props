@@ -20,7 +20,7 @@
     <PackageProjectUrl>https://github.com/skyhop/Mail</PackageProjectUrl>
     <RepositoryUrl>https://github.com/skyhop/Mail</RepositoryUrl>
     <PackageReleaseNotes>
-      - Added transformations to edit the message post-render and pre-sending
+      - Added transformations to edit the message content and senderinfo
     </PackageReleaseNotes>
   </PropertyGroup>
 
