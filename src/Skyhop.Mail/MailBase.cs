@@ -67,7 +67,7 @@ namespace Skyhop.Mail
         /// A transform that can be used to update message headers and/or content before sending the message.
         /// </summary>
         /// <remarks>
-        /// This async method will be called after rendering, but before sending the message.
+        /// This async method will be called before sending the message.
         /// </remarks>
         public virtual Func<IMessageContent, Task> MessageTransform { get; set; } = _ => Task.CompletedTask;
     }
