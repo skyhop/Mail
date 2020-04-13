@@ -69,6 +69,6 @@ namespace Skyhop.Mail
         /// <remarks>
         /// This async method will be called after rendering, but before sending the message.
         /// </remarks>
-        public Func<IMessageContent, Task> MessageTransform { get; set; } = _ => Task.CompletedTask;
+        public virtual Func<IMessageContent, Task> MessageTransform { get; set; } = _ => Task.CompletedTask;
     }
 }
