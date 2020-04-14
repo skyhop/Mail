@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MimeKit;
 using Skyhop.Mail.Abstractions;
+using Skyhop.Mail.Internal;
 using Skyhop.Mail.Options;
 using System;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace Skyhop.Mail
         /// <param name="bcc">The addresses to which the mail must be bcc'ed.</param>
         /// <param name="from">The addresses from which the mail is sent, can be null, but then a DefaultFromAddress in <seealso cref="MailDispatcherOptions"/> must be set.</param>
         /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
-        public async Task SendMail<T>(
+        public Task SendMail<T>(
             T data,
             MailboxAddress[] to,
             MailboxAddress[]? cc = default,
@@ -53,21 +54,51 @@ namespace Skyhop.Mail
             if (to.Length == 0)
                 throw new ArgumentException(nameof(to), $"There must be atleast one mail address in the {nameof(to)} parameter.");
 
+            Func<IMessageSenderInfo, Task> senderTransform = message =>
+            {
+                message.From.Add(from);
+                message.To.AddRange(to);
+                if (cc != default && cc.Any())
+                    message.Cc.AddRange(cc);
+                if (bcc != default && bcc.Any())
+                    message.Bcc.AddRange(bcc);
+
+                return Task.CompletedTask;
+            };
+
+            return SendMail(data, senderTransform);
+        }
+
+        /// <summary>
+        /// Sends the email
+        /// </summary>
+        /// <typeparam name="T">The type of the model carrying the payload of the mail.</typeparam>
+        /// <param name="data">The message payload</param>
+        /// <param name="senderTransformation">An async action that can be used to set the different properties on the <seealso cref="IMessageSenderInfo"/>. The To and From properties must be set.</param>
+        /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
+        public async Task SendMail<T>(T data, Func<IMessageSenderInfo, Task> senderTransformation)
+            where T : MailBase
+        {
+            _ = senderTransformation ?? throw new ArgumentNullException(nameof(senderTransformation));
+
             var message = await _renderModelToMimeMessage(data);
 
-            message.From.Add(from);
-            message.To.AddRange(to);
-            if (cc != default && cc.Any())
-                message.Cc.AddRange(cc);
-            if (bcc != default && bcc.Any())
-                message.Bcc.AddRange(bcc);
+            if (data.MessageTransform != null)
+                await data.MessageTransform(message);
+
+            await senderTransformation(message);
+
+            if (( message.To?.Count ?? 0 ) == 0)
+                throw new ArgumentException($"The {nameof(message.To)} parameter must be set in the {nameof(senderTransformation)} action.");
+            if (( message.From?.Count ?? 0 ) == 0)
+                throw new ArgumentException($"The {nameof(message.From)} parameter must be set in the {nameof(senderTransformation)} action.");
 
             using var scope = _scopeFactory.CreateScope();
             var mailSender = scope.ServiceProvider.GetRequiredService<IMailSender>();
-            await mailSender.SendMail(message);
+            await mailSender.SendMail(message.WrappedMessage);
         }
 
-        private async Task<MimeMessage> _renderModelToMimeMessage<T>(T data)
+        private async Task<MimeMessageWrapper> _renderModelToMimeMessage<T>(T data)
              where T : MailBase
         {
             var (htmlBody, textBody) = await _getBody(data);
@@ -75,7 +106,7 @@ namespace Skyhop.Mail
             data.BodyBuilder.HtmlBody = htmlBody;
             data.BodyBuilder.TextBody = textBody;
 
-            return new MimeMessage()
+            var mimeMessage = new MimeMessage()
             {
                 Body = data.BodyBuilder.ToMessageBody(),
                 Subject = data.Subject,
@@ -83,6 +114,8 @@ namespace Skyhop.Mail
                 XPriority = data.XPriority,
                 Importance = data.Importance
             };
+
+            return new MimeMessageWrapper(mimeMessage);
         }
 
         private async Task<(string HtmlBody, string TextBody)> _getBody<T>(T data)
