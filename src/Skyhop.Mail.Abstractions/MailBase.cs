@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Skyhop.Mail
 {
     /// <summary>
-    /// Base class for all view-models for the <seealso cref="MailDispatcher"/> views
+    /// Base class for all view-models for the <seealso cref="IMailDispatcher"/> views
     /// </summary>
     public class MailBase
     {

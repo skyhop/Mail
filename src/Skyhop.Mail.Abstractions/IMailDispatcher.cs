@@ -17,7 +17,7 @@ namespace Skyhop.Mail.Abstractions
         /// <param name="to">The addresses to which the mail must be sent</param>
         /// <param name="cc">The addresses to which the mail must be cc'ed.</param>
         /// <param name="bcc">The addresses to which the mail must be bcc'ed.</param>
-        /// <param name="from">The addresses from which the mail is sent, can be null, but then a DefaultFromAddress in <seealso cref="MailDispatcherOptions"/> must be set.</param>
+        /// <param name="from">The addresses from which the mail is sent, can be null.</param>
         /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
         public Task SendMail<T>(
             T data,
