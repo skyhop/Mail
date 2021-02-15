@@ -14,7 +14,7 @@ namespace Skyhop.Mail
     /// <summary>
     /// Class used to generate and send emails
     /// </summary>
-    public class MailDispatcher
+    public class MailDispatcher : IMailDispatcher
     {
         private readonly RazorViewToStringRenderer _renderer;
         private readonly MailDispatcherOptions _options;
