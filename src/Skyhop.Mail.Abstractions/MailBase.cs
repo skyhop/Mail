@@ -61,7 +61,7 @@ namespace Skyhop.Mail
         /// <summary>
         /// The body builder used for the <see cref="Attachments"/>, <see cref="LinkedResources"/>, Html body and text body of the message.
         /// </summary>
-        protected internal BodyBuilder BodyBuilder { get; }
+        public BodyBuilder BodyBuilder { get; }
 
         /// <summary>
         /// A transform that can be used to update message headers and/or content before sending the message.

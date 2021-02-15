@@ -38,6 +38,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Templates", "samples
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Skyhop.Mail", "src\Skyhop.Mail\Skyhop.Mail.csproj", "{23BAD21E-79CB-4665-AD95-EDC0B2449C58}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skyhop.Mail.Abstractions", "src\Skyhop.Mail.Abstractions\Skyhop.Mail.Abstractions.csproj", "{1F4A7C5A-53F6-441B-ADAC-E880AB4CA3B6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{23BAD21E-79CB-4665-AD95-EDC0B2449C58}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23BAD21E-79CB-4665-AD95-EDC0B2449C58}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23BAD21E-79CB-4665-AD95-EDC0B2449C58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F4A7C5A-53F6-441B-ADAC-E880AB4CA3B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F4A7C5A-53F6-441B-ADAC-E880AB4CA3B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F4A7C5A-53F6-441B-ADAC-E880AB4CA3B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F4A7C5A-53F6-441B-ADAC-E880AB4CA3B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,6 +73,7 @@ Global
 		{B20B9859-B36F-4C12-8AEE-2E4631E6E477} = {421325E9-9344-43DD-962E-D1FE890F7E8D}
 		{EDF5D8A1-8DBA-43C6-BD58-4A2933E8A985} = {421325E9-9344-43DD-962E-D1FE890F7E8D}
 		{23BAD21E-79CB-4665-AD95-EDC0B2449C58} = {B03343F8-EE4C-4386-90BF-94225E44D24C}
+		{1F4A7C5A-53F6-441B-ADAC-E880AB4CA3B6} = {B03343F8-EE4C-4386-90BF-94225E44D24C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {02451752-289A-4A52-9BBF-1BCB4C640289}

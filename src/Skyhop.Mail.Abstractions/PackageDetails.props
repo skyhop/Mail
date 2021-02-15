@@ -14,7 +14,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageTags>mail razor</PackageTags>
-    <Title>Skyhop.Mail</Title>
+    <Title>Skyhop.Mail.Abstractions</Title>
     <Product>$(Title)</Product>
     <Description>A library smoothing email generation from .NET code, by enforcing a strong boundary between the template, and code rendering the template.</Description>
     <PackageProjectUrl>https://github.com/skyhop/Mail</PackageProjectUrl>
