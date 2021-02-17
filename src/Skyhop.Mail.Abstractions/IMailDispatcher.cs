@@ -34,7 +34,7 @@ namespace Skyhop.Mail.Abstractions
         /// <param name="senderTransformation">An async action that can be used to set the different properties on the <seealso cref="IMessageSenderInfo"/>. The To and From properties must be set.</param>
         /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
         public Task SendMail<T>(
-            T data,
-            Func<IMessageSenderInfo, Task> senderTransformation) where T : MailBase;
+            T data, Func<IMessageSenderInfo, Task> senderTransformation)
+            where T : MailBase;
     }
 }

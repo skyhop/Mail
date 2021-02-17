@@ -38,7 +38,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Templates", "samples
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Skyhop.Mail", "src\Skyhop.Mail\Skyhop.Mail.csproj", "{23BAD21E-79CB-4665-AD95-EDC0B2449C58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skyhop.Mail.Abstractions", "src\Skyhop.Mail.Abstractions\Skyhop.Mail.Abstractions.csproj", "{1F4A7C5A-53F6-441B-ADAC-E880AB4CA3B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Skyhop.Mail.Abstractions", "src\Skyhop.Mail.Abstractions\Skyhop.Mail.Abstractions.csproj", "{1F4A7C5A-53F6-441B-ADAC-E880AB4CA3B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
