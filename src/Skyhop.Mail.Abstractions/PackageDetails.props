@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
+
   <PropertyGroup>
-    <Title>Skyhop.Mail</Title>
+    <Title>Skyhop.Mail.Abstractions</Title>
     <Product>$(Title)</Product>
-    <Description>A library smoothing email generation from .NET code, by enforcing a strong boundary between the template, and code rendering the template.</Description>
     <PackageReleaseNotes>
       - Split the interfaces and base classes into different packages
     </PackageReleaseNotes>
   </PropertyGroup>
+
 </Project>

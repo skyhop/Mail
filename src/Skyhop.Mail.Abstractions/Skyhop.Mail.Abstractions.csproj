@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$(MSBuildThisFileDirectory)\PackageDetails.props" />
+  <Import Project="$(MSBuildThisFileDirectory)\..\PackageDetails.props" />
+
+  <ItemGroup>
+    <PackageReference Include="MimeKit" Version="2.10.1" />
+  </ItemGroup>
+
+</Project>

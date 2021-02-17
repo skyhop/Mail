@@ -26,7 +26,7 @@ namespace Microsoft.Extensions.DependencyInjection
             // Renderer + internal dependencies
             serviceCollection.AddSingleton<RazorViewToStringRenderer>();
             serviceCollection.AddSingleton<IModelIdentifierLister, ModelIdentifierLister>();
-            serviceCollection.AddSingleton<MailDispatcher>();
+            serviceCollection.AddSingleton<IMailDispatcher, MailDispatcher>();
             serviceCollection.Configure(mailDispatcherOptionsBuilder ?? (_ => { } ));
 
             // Try add if not already added needed Razor dependencies

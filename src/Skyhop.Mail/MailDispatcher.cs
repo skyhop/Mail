@@ -11,10 +11,8 @@ using System.Threading.Tasks;
 
 namespace Skyhop.Mail
 {
-    /// <summary>
-    /// Class used to generate and send emails
-    /// </summary>
-    public class MailDispatcher
+    /// <inheritdoc/>
+    public class MailDispatcher : IMailDispatcher
     {
         private readonly RazorViewToStringRenderer _renderer;
         private readonly MailDispatcherOptions _options;
@@ -33,16 +31,7 @@ namespace Skyhop.Mail
             _scopeFactory = scopeFactory;
         }
 
-        /// <summary>
-        /// Sends the email
-        /// </summary>
-        /// <typeparam name="T">The type of the model carrying the payload of the mail.</typeparam>
-        /// <param name="data">The message payload</param>
-        /// <param name="to">The addresses to which the mail must be sent</param>
-        /// <param name="cc">The addresses to which the mail must be cc'ed.</param>
-        /// <param name="bcc">The addresses to which the mail must be bcc'ed.</param>
-        /// <param name="from">The addresses from which the mail is sent, can be null, but then a DefaultFromAddress in <seealso cref="MailDispatcherOptions"/> must be set.</param>
-        /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
+        /// <inheritdoc />
         public Task SendMail<T>(
             T data,
             MailboxAddress[] to,
@@ -69,13 +58,7 @@ namespace Skyhop.Mail
             return SendMail(data, senderTransform);
         }
 
-        /// <summary>
-        /// Sends the email
-        /// </summary>
-        /// <typeparam name="T">The type of the model carrying the payload of the mail.</typeparam>
-        /// <param name="data">The message payload</param>
-        /// <param name="senderTransformation">An async action that can be used to set the different properties on the <seealso cref="IMessageSenderInfo"/>. The To and From properties must be set.</param>
-        /// <returns>An awaitable <seealso cref="Task"/> which represents this method call.</returns>
+        /// <inheritdoc />
         public async Task SendMail<T>(T data, Func<IMessageSenderInfo, Task> senderTransformation)
             where T : MailBase
         {
