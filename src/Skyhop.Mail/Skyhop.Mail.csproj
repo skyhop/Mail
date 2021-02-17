@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="$(MSBuildThisFileDirectory)\PackageDetails.props" />
+  <Import Project="$(MSBuildThisFileDirectory)\..\PackageDetails.props" />
   
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.17" />
